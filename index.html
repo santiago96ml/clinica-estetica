@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título actualizado para reflejar el nuevo tema -->
+    <title>Vintex Clinic - Gestión (Tema Mery)</title>
+    <link rel="icon" href="apple-touch-icon.png" type="image/png"> <link rel="apple-touch-icon" href="logo192.png"> <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/dist/date-fns.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns-tz@1.3.7/dist/date-fns-tz.min.js"></script>
+    <style>
+        /* --- ESTILOS CON TEMA "MERY" (BLANCO + FUCSIA) --- */
+        
+        /* Estilos generales y scrollbar */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Mery: Fondo blanco */
+            background-color: #FFFFFF; 
+            /* Mery: Texto oscuro */
+            color: #111111; 
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        /* Mery: Scrollbar claro */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+
+        /* Mery: Scrollbar gris */
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1; 
+            border-radius: 10px;
+        }
+
+        /* Estilos Agenda */
+        /* Mery: Rayas de columna inactiva más claras */
+        .inactive-doctor-column {
+            background-image: repeating-linear-gradient(45deg, rgba(230, 230, 230, 0.5), rgba(230, 230, 230, 0.5) 10px, rgba(240, 240, 240, 0.5) 10px, rgba(240, 240, 240, 0.5) 20px);
+        }
+
+        /* Mery: Slots fuera de hora en gris claro */
+        .out-of-hours-slot {
+            background-color: #f5f5f5; 
+        }
+
+        /* Mery: Hover con acento fucsia */
+        .agenda-slot:not(.out-of-hours-slot):hover {
+            background-color: rgba(255, 0, 168, 0.1); 
+        }
+
+        /* Responsive Agenda Grid Override (sin cambios de color) */
+        #agenda-container {
+            overflow-x: auto;
+        }
+        
+        #agenda-grid {
+            min-width: 700px; 
+        }
+        
+        @media (max-width: 480px) {
+            #agenda-grid > div:first-child .text-xs {
+                font-size: 8px;
+            }
+        }
+
+        /* Loader, Inputs, Tabs, Chat, Notificación, Auras */
+        .loader {
+            /* Mery: Borde claro */
+            border: 5px solid #e0e0e0; 
+            /* Mery: Acento Fucsia */
+            border-top: 5px solid #FF00A8; 
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Inputs tema claro */
+        .light-input {
+            background-color: #FFFFFF;
+            border-color: #CBD5E1; /* gris-300 */
+            color: #111111;
+            border-width: 1px;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+
+        /* Focus con acento fucsia */
+        .light-input:focus {
+            border-color: #FF00A8; 
+            --tw-ring-color: #FF00A8; 
+            background-color: #FFFFFF;
+            outline: none;
+            box-shadow: 0 0 0 1px #FF00A8; 
+        }
+
+        select.light-input {
+            /* Icono de select (gris) */
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            appearance: none;
+        }
+
+        /* Tabs con acento fucsia */
+        .tab-active {
+            background-color: #FF00A8; 
+            color: #FFFFFF; /* Texto blanco para contraste */
+            font-weight: 600;
+        }
+
+        .filter-btn-active {
+            background-color: #FF00A8;
+            color: #FFFFFF; /* Texto blanco para contraste */
+        }
+
+        /* Chat con acento fucsia */
+        .chat-bubble-user {
+            background-color: #FF00A8;
+            color: #FFFFFF; /* Texto blanco para contraste */
+        }
+
+        .chat-bubble-bot {
+            background-color: #EEEEEE; /* Gris claro */
+            color: #111111; /* Texto oscuro */
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: #ef4444; /* Rojo (se mantiene) */
+            border-radius: 50%;
+            /* Borde blanco sobre fondo claro */
+            border: 2px solid #FFFFFF; 
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        .neon-aura {
+            transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+            position: relative;
+        }
+
+        /* Aura fucsia */
+        .neon-aura-pink {
+            box-shadow: 0 0 5px rgba(255, 0, 168, 0.3), 0 0 10px rgba(255, 0, 168, 0.2);
+        }
+
+        .neon-aura-pink:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 0, 168, 0.5), 0 0 30px rgba(255, 0, 168, 0.3);
+        }
+        /* Fin Aura fucsia */
+
+        .neon-aura-red {
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.5), 0 0 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .neon-aura-red:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.7), 0 0 40px rgba(239, 68, 68, 0.4);
+        }
+
+        #notification-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            max-height: 400px;
+            /* Fondo blanco sólido */
+            background: #FFFFFF; 
+            border: 1px solid #e0e0e0; /* Borde gris claro */
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            z-index: 100;
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile fixes (sin cambios de color) */
+        @media (max-width: 767px) {
+            #patients-table-container {
+                overflow-x: auto;
+            }
+            #patients-table {
+                min-width: 640px;
+            }
+        }
+        
+        #sidebar.open {
+            transform: translateX(0);
+        }
+
+        .spinner {
+            border: 2px solid rgba(0, 0, 0, 0.1); /* Borde claro */
+            border-top-color: #333333; /* Color oscuro para el spinner */
+            border-radius: 50%;
+            width: 1.25rem;
+            height: 1.25rem;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+    <!-- Modal Login: Fondo blanco, acento fucsia -->
+    <div id="login-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm hidden">
+        <div id="login-modal-content" class="bg-white w-full max-w-sm rounded-2xl shadow-2xl border border-gray-200 overflow-hidden transform opacity-100 scale-100">
+            <form id="secure-login-form">
+                <div class="p-6 border-b border-gray-200 text-center">
+                    <a href="#" class="flex items-center justify-center space-x-2 mb-2 transition-transform hover:scale-105">
+                        <!-- Acento Fucsia -->
+                        <i class="fas fa-bolt text-2xl" style="color:#FF00A8;"></i> 
+                        <!-- Texto Oscuro -->
+                        <h1 class="text-2xl font-bold text-gray-900">Vintex Clinic</h1>
+                    </a>
+                    <!-- Texto Gris -->
+                    <p class="text-sm text-gray-500">Iniciar sesión</p>
+                </div>
+                <div class="p-6 space-y-4">
+                    <!-- Labels oscuras -->
+                    <div><label for="login-email" class="text-sm font-medium text-gray-700 mb-1 block">Email</label>
+                        <!-- Input tema claro -->
+                        <input type="email" id="login-email" value="admin@vintex.com" class="light-input w-full" required autocomplete="username">
+                    </div>
+                    <div><label for="login-password" class="text-sm font-medium text-gray-700 mb-1 block">Contraseña</label>
+                        <!-- Input tema claro -->
+                        <input type="password" id="login-password" value="admin123" class="light-input w-full" required autocomplete="current-password">
+                    </div>
+                    <p id="secure-login-error" class="text-sm text-center text-red-500 hidden">Credenciales inválidas.</p>
+                </div>
+                <!-- Botón con acento fucsia y texto blanco -->
+                <div class="p-6 bg-gray-50 border-t border-gray-200">
+                    <button type="submit" id="login-submit-btn" class="w-full py-3 px-4 bg-[#FF00A8] font-semibold text-white rounded-md shadow-lg transition hover:scale-105 hover:bg-[#E60097] flex items-center justify-center">Ingresar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="app-view" class="hidden flex h-screen">
+        <!-- Sidebar: Fondo gris claro, acento fucsia -->
+        <aside id="sidebar" class="bg-gray-100 border-r border-gray-200 w-64 flex-shrink-0 flex flex-col fixed inset-y-0 left-0 z-50 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="p-4 text-center border-b border-gray-200">
+                <a href="#" class="flex items-center justify-center space-x-2 transition-transform hover:scale-105">
+                    <!-- Acento Fucsia -->
+                    <i class="fas fa-bolt text-2xl" style="color:#FF00A8;"></i> 
+                    <!-- Texto Oscuro -->
+                    <h1 class="text-2xl font-bold text-gray-900">Vintex</h1>
+                </a>
+            </div>
+            <nav class="flex-1 space-y-2 px-4 py-4">
+                <!-- Link Activo: Acento Fucsia -->
+                <a href="#" id="agenda-link" class="flex items-center rounded-lg border-l-4 border-[#FF00A8] bg-[#FF00A8]/10 px-4 py-3 text-gray-900 font-semibold neon-aura-pink">
+                    <i class="fas fa-calendar-alt w-6 text-center" style="color:#FF00A8;"></i>
+                    <span class="ml-3">Agenda</span>
+                </a>
+                <!-- Links Inactivos: Texto gris -->
+                <a href="#" id="patients-link" class="relative flex items-center rounded-lg border-l-4 border-transparent px-4 py-3 text-gray-600 hover:text-gray-900 neon-aura">
+                    <i class="fas fa-users w-6 text-center"></i>
+                    <span class="ml-3">Pacientes</span>
+                    <span id="secretary-notification-dot" class="hidden notification-dot"></span>
+                </a>
+                <a href="#" id="doctors-link" class="flex items-center rounded-lg border-l-4 border-transparent px-4 py-3 text-gray-600 hover:text-gray-900 neon-aura">
+                    <i class="fas fa-user-md w-6 text-center"></i>
+                    <span class="ml-3">Doctores</span>
+                </a>
+            </nav>
+            <div class="px-4 py-4 border-t border-gray-200">
+                <!-- Botón Logout: Gris, hover rojo claro -->
+                <button id="logout-btn" class="w-full flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-red-100 hover:text-red-700 transition-colors">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- Overlay claro -->
+        <div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-black bg-opacity-50 md:hidden"></div>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header: Fondo blanco, acento fucsia -->
+            <main id="agenda-view" class="fade-in flex-1 flex flex-col overflow-hidden">
+                <header class="border-b border-gray-200 bg-white p-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div class="flex items-center w-full sm:w-auto">
+                            <!-- Botón Menú: Gris -->
+                            <button id="menu-btn-agenda" class="mr-4 text-gray-500 hover:text-gray-900 md:hidden"><i class="fas fa-bars text-xl"></i></button>
+                            <!-- Título: Oscuro -->
+                            <h2 id="current-date-agenda" class="text-xl font-semibold text-gray-900 text-base sm:text-xl">Cargando...</h2>
+                        </div>
+                        <div class="flex items-center space-x-2 self-start sm:self-center">
+                            <!-- Controles: Grises -->
+                            <button id="prev-day-agenda" class="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900"><i class="fas fa-chevron-left"></i></button>
+                            <button id="today-btn-agenda" class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50">Hoy</button>
+                            <button id="next-day-agenda" class="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mt-4">
+                        <div class="relative w-full md:w-auto md:flex-grow">
+                            <!-- Select: Tema claro -->
+                            <select id="doctor-filter" class="light-input appearance-none rounded-lg px-4 py-2 pr-8 text-sm font-medium w-full">
+                                <option value="all">Todos los profesionales</option>
+                            </select>
+                            <i class="fas fa-chevron-down pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                        </div>
+                        <!-- Botón Añadir: Acento Fucsia -->
+                        <button id="add-appointment-btn" class="w-full md:w-auto flex-shrink-0 bg-[#FF00A8] hover:bg-[#E60097] flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-lg">
+                            <i class="fas fa-plus mr-2"></i>Agendar Cita
+                        </button>
+                    </div>
+                </header>
+                <div id="agenda-container" class="relative flex-1 overflow-auto">
+                    <div class="absolute inset-0 flex items-center justify-center z-20" id="loader-container"><div class="loader"></div></div>
+                    <!-- Grid: Colores definidos en CSS -->
+                    <div class="hidden grid" id="agenda-grid" style="grid-template-columns: minmax(50px, 0.5fr) repeat(auto-fit, minmax(180px, 1fr));"></div>
+                </div>
+            </main>
+
+            <!-- Vista Pacientes: Tema claro -->
+            <main id="patients-view" class="hidden flex-1 flex flex-col overflow-hidden">
+                <header class="border-b border-gray-200 bg-white p-4">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center w-full md:w-auto">
+                            <button id="menu-btn-patients" class="mr-4 text-gray-500 hover:text-gray-900 md:hidden"><i class="fas fa-bars text-xl"></i></button>
+                            <h2 class="text-xl font-semibold text-gray-900 text-base sm:text-xl">Registro de Pacientes</h2>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                            <!-- Filtro: Fondo gris claro, acento fucsia -->
+                            <div id="patient-period-filter" class="flex items-center rounded-lg bg-gray-200 p-1 flex-wrap justify-center sm:flex-nowrap w-full sm:w-auto">
+                                <button data-period="all" class="filter-btn-active rounded-md px-3 py-1 text-sm transition flex-1 sm:flex-grow-0">Todos</button>
+                                <button data-period="day" class="rounded-md px-3 py-1 text-sm text-gray-600 transition flex-1 sm:flex-grow-0">Día</button>
+                                <button data-period="week" class="rounded-md px-3 py-1 text-sm text-gray-600 transition flex-1 sm:flex-grow-0">Semana</button>
+                                <button data-period="month" class="rounded-md px-3 py-1 text-sm text-gray-600 transition flex-1 sm:flex-grow-0">Mes</button>
+                            </div>
+                            <div class="relative flex-grow w-full">
+                                <!-- Input tema claro -->
+                                <input type="text" id="patient-search" placeholder="Buscar por nombre o DNI..." class="light-input w-full rounded-lg pl-10 pr-4 py-2 text-sm">
+                                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <div id="patients-container" class="flex-1 overflow-auto p-4 md:p-6">
+                    <!-- Contenido JS (tema claro) -->
+                </div>
+            </main>
+
+            <!-- Vista Doctores: Tema claro -->
+            <main id="doctors-view" class="hidden flex-1 flex flex-col overflow-hidden">
+                <header class="border-b border-gray-200 bg-white p-4">
+                    <div class="flex items-center">
+                        <button id="menu-btn-doctors" class="mr-4 text-gray-500 hover:text-gray-900 md:hidden"><i class="fas fa-bars text-xl"></i></button>
+                        <h2 class="text-xl font-semibold text-gray-900 text-base sm:text-xl">Gestión de Doctores</h2>
+                    </div>
+                </header>
+                <div class="flex-1 overflow-auto p-4 md:p-6 space-y-8">
+                    <!-- Tarjeta: Fondo blanco, acento fucsia -->
+                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Añadir Nuevo Doctor</h3>
+                        <form id="add-doctor-form" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end">
+                            <div class="lg:col-span-2"><label for="doc-nombre" class="text-sm font-medium text-gray-600">Nombre Completo</label><input type="text" id="doc-nombre" class="light-input mt-1 w-full rounded-md" required></div>
+                            <div class="sm:col-span-1"><label for="doc-especialidad" class="text-sm font-medium text-gray-600">Especialidad</label><input type="text" id="doc-especialidad" class="light-input mt-1 w-full rounded-md" required></div>
+                            <div class="sm:col-span-1"><label for="doc-horario-inicio" class="text-sm font-medium text-gray-600">Inicio Jornada</label><input type="time" id="doc-horario-inicio" class="light-input mt-1 w-full rounded-md" required></div>
+                            <div class="sm:col-span-1"><label for="doc-horario-fin" class="text-sm font-medium text-gray-600">Fin Jornada</label><input type="time" id="doc-horario-fin" class="light-input mt-1 w-full rounded-md" required></div>
+                            <div class="flex items-center justify-between sm:col-span-2 lg:col-span-1 pt-6 gap-4">
+                                <div class="flex items-center">
+                                    <!-- Checkbox: Acento Fucsia -->
+                                    <input type="checkbox" id="doc-activo" class="h-4 w-4 rounded bg-gray-100 border-gray-300 text-[#FF00A8] focus:ring-[#FF00A8]" checked>
+                                    <label for="doc-activo" class="ml-2 text-sm font-medium text-gray-700">Activo</label>
+                                </div>
+                                <!-- Botón: Acento Fucsia -->
+                                <button type="submit" class="bg-[#FF00A8] text-white font-semibold px-4 py-2 rounded-lg w-full sm:w-auto hover:bg-[#E60097]">Añadir</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="doctors-container">
+                        <!-- Contenido JS (tema claro) -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Principal: Tema claro -->
+    <div id="main-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <!-- Contenido JS (tema claro) -->
+    </div>
+
+    <!-- Popup Notificación: Tema claro -->
+    <div id="notification-popup" class="hidden shadow-2xl z-50">
+        <!-- Contenido JS (tema claro) -->
+    </div>
+
+    <!-- Modal Notificación: Tema claro -->
+    <div id="notification-modal" class="hidden fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div id="notification-modal-content" class="bg-white border border-gray-200 rounded-lg shadow-xl w-full max-w-sm p-6 text-center fade-in">
+            <h3 id="notification-modal-title" class="text-xl font-semibold text-gray-900 mb-2">Error</h3>
+            <p id="notification-modal-body" class="text-sm text-gray-700 mb-6">Ha ocurrido un error.</p>
+            <!-- Botón: Acento Fucsia -->
+            <button id="notification-modal-btn" class="bg-[#FF00A8] text-white font-semibold px-4 py-2 rounded-lg hover:bg-[#E60097] transition-colors">Entendido</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import {
+            formatInTimeZone,
+            zonedTimeToUtc
+        } from 'https://cdn.jsdelivr.net/npm/date-fns-tz@1.3.7/+esm';
+        import {
+            parseISO,
+            format
+        } from 'https://cdn.jsdelivr.net/npm/date-fns@2.29.3/+esm';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- URL DEL BACKEND (sin cambios) ---
+            const API_BASE_URL = 'https://vintex-clinic-vintex-backend.1kh9sk.easypanel.host/api';
+
+            // --- Zona Horaria por Defecto (sin cambios) ---
+            const DEFAULT_TIMEZONE = 'America/Buenos_Aires';
+
+            // --- SELECTORES GLOBALES (sin cambios) ---
+            const loginModal = document.getElementById('login-modal');
+            const loginModalContent = document.getElementById('login-modal-content');
+            const secureLoginForm = document.getElementById('secure-login-form');
+            const loginEmailInput = document.getElementById('login-email');
+            const loginPasswordInput = document.getElementById('login-password');
+            const loginSubmitBtn = document.getElementById('login-submit-btn');
+            const loginErrorMsg = document.getElementById('secure-login-error');
+            const appView = document.getElementById('app-view');
+            const agendaView = document.getElementById('agenda-view');
+            const patientsView = document.getElementById('patients-view');
+            const doctorsView = document.getElementById('doctors-view');
+            const agendaLink = document.getElementById('agenda-link');
+            const patientsLink = document.getElementById('patients-link');
+            const doctorsLink = document.getElementById('doctors-link');
+            const agendaGridEl = document.getElementById('agenda-grid');
+            const mainModal = document.getElementById('main-modal');
+            const loaderContainer = document.getElementById('loader-container');
+            const patientsContainer = document.getElementById('patients-container');
+            const doctorsContainer = document.getElementById('doctors-container');
+            const patientSearchInput = document.getElementById('patient-search');
+            const addDoctorForm = document.getElementById('add-doctor-form');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const menuBtns = [document.getElementById('menu-btn-agenda'), document.getElementById('menu-btn-patients'), document.getElementById('menu-btn-doctors')].filter(Boolean);
+            const notificationPopup = document.getElementById('notification-popup');
+            const logoutBtn = document.getElementById('logout-btn');
+            const notificationModal = document.getElementById('notification-modal');
+            const notificationModalTitle = document.getElementById('notification-modal-title');
+            const notificationModalBody = document.getElementById('notification-modal-body');
+            const notificationModalBtn = document.getElementById('notification-modal-btn');
+
+            // --- ESTADO GLOBAL (sin cambios) ---
+            let currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+            let allDoctors = [],
+                allClients = [],
+                allAppointments = [],
+                allChatHistory = [];
+            let currentPatientFilter = 'all';
+            let hasShownSecretaryPopup = false;
+            let patientAppointmentIndex = {};
+            let authToken = localStorage.getItem('authToken');
+            let updateInterval = null;
+
+            // --- 1. AUTENTICACIÓN Y ARRANQUE (sin cambios) ---
+            checkAuth();
+            secureLoginForm?.addEventListener('submit', handleLogin);
+            logoutBtn?.addEventListener('click', handleLogout);
+            notificationModalBtn?.addEventListener('click', () => notificationModal?.classList.add('hidden'));
+            notificationModal?.addEventListener('click', (e) => {
+                if (e.target === notificationModal) notificationModal.classList.add('hidden');
+            });
+            
+            menuBtns.forEach(btn => btn.addEventListener('click', toggleSidebar));
+            sidebarOverlay?.addEventListener('click', toggleSidebar);
+
+            function toggleSidebar() {
+                sidebar?.classList.toggle('open');
+                sidebarOverlay?.classList.toggle('hidden');
+            }
+
+            async function checkAuth() {
+                authToken = localStorage.getItem('authToken');
+                if (authToken) {
+                    console.log("Token activo.");
+                    loginModal?.classList.add('hidden');
+                    appView?.classList.remove('hidden');
+                    initializeApp();
+                } else {
+                    console.log("No hay token, mostrando login.");
+                    loginModal?.classList.remove('hidden');
+                    appView?.classList.add('hidden');
+                    if (updateInterval) clearInterval(updateInterval);
+                    updateInterval = null;
+                    if (appView) appView.dataset.initialized = 'false';
+                }
+            }
+
+            async function handleLogin(e) {
+                e.preventDefault();
+                if (loginErrorMsg) loginErrorMsg.classList.add('hidden');
+                if (loginSubmitBtn) {
+                    loginSubmitBtn.disabled = true;
+                    loginSubmitBtn.innerHTML = 'Ingresando... <span class="spinner"></span>';
+                }
+
+                const email = loginEmailInput?.value;
+                const password = loginPasswordInput?.value;
+                if (!email || !password) {
+                    console.error("Faltan campos.");
+                    if (loginErrorMsg) {
+                        loginErrorMsg.textContent = 'Campos requeridos.';
+                        loginErrorMsg.classList.remove('hidden');
+                    }
+                    if (loginSubmitBtn) {
+                        loginSubmitBtn.disabled = false;
+                        loginSubmitBtn.innerHTML = 'Ingresar';
+                    }
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email,
+                            password
+                        })
+                    });
+                    const contentType = response.headers.get("content-type");
+                    let data;
+                    if (contentType && contentType.indexOf("application/json") !== -1) {
+                        data = await response.json();
+                    } else {
+                        const textResponse = await response.text();
+                        throw new Error(`Respuesta inesperada (${response.status}): ${textResponse.substring(0, 100)}...`);
+                    }
+                    if (!response.ok) throw new Error(data.error || `Error ${response.status}`);
+
+                    authToken = data.token;
+                    localStorage.setItem('authToken', authToken);
+                    console.log("Login OK.");
+                    if (loginModal) loginModal.style.opacity = '0';
+                    if (loginModalContent) loginModalContent.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        if (loginModal) {
+                            loginModal.classList.add('hidden');
+                            loginModal.style.opacity = '1';
+                        }
+                        if (loginModalContent) loginModalContent.style.transform = 'scale(1)';
+                        if (appView) appView.classList.remove('hidden');
+                        initializeApp();
+                    }, 300);
+                } catch (error) {
+                    console.error("Error login:", error);
+                    if (loginErrorMsg) {
+                        loginErrorMsg.textContent = "Credenciales inválidas o error de conexión.";
+                        loginErrorMsg.classList.remove('hidden');
+                    }
+                } finally {
+                    if (loginSubmitBtn) {
+                        loginSubmitBtn.disabled = false;
+                        loginSubmitBtn.innerHTML = 'Ingresar';
+                    }
+                }
+            }
+
+            function handleLogout() {
+                authToken = null;
+                localStorage.removeItem('authToken');
+                console.log("Logout.");
+                if (updateInterval) clearInterval(updateInterval);
+                updateInterval = null;
+                if (appView) appView.classList.add('hidden');
+                if (loginModal) {
+                    loginModal.classList.remove('hidden');
+                    loginModal.style.opacity = '1';
+                }
+                if (loginModalContent) loginModalContent.style.transform = 'scale(1)';
+                if (loginPasswordInput) loginPasswordInput.value = '';
+                if (loginErrorMsg) loginErrorMsg.classList.add('hidden');
+                if (appView) appView.dataset.initialized = 'false';
+                window.location.reload();
+            }
+
+            function initializeApp() {
+                if (!appView || (appView.dataset.initialized === 'true')) {
+                    console.log("App ya inicializada.");
+                    if (authToken && !updateInterval) {
+                        updateInterval = setInterval(() => fetchDataAndRender(false), 30000);
+                        console.log("Intervalo (re)iniciado.");
+                    }
+                    if (authToken && allDoctors.length === 0) {
+                        console.log("Forzando carga...");
+                        fetchDataAndRender(true);
+                    }
+                    return;
+                }
+                console.log("Inicializando listeners...");
+                const doctorFilter = document.getElementById('doctor-filter');
+                const periodFilterButtons = document.querySelectorAll('#patient-period-filter button');
+                setupNavigationListeners();
+                setupDateControls();
+                setupAgendaListeners();
+                addDoctorForm?.removeEventListener('submit', handleAddDoctor);
+                addDoctorForm?.addEventListener('submit', handleAddDoctor);
+                doctorFilter?.removeEventListener('change', renderAgenda);
+                doctorFilter?.addEventListener('change', renderAgenda);
+                patientSearchInput?.removeEventListener('input', handlePatientSearchInput);
+                patientSearchInput?.addEventListener('input', handlePatientSearchInput);
+                periodFilterButtons.forEach(btn => {
+                    btn.removeEventListener('click', handlePeriodFilterClick);
+                    btn.addEventListener('click', handlePeriodFilterClick);
+                });
+                appView.dataset.initialized = 'true';
+                fetchDataAndRender(true);
+                if (updateInterval) clearInterval(updateInterval);
+                updateInterval = setInterval(() => fetchDataAndRender(false), 30000);
+                console.log("Intervalo iniciado.");
+            }
+
+            function handlePatientSearchInput(e) {
+                renderPatients(e.target.value, true);
+            }
+
+            function handlePeriodFilterClick(e) {
+                const btn = e.currentTarget;
+                const activeBtn = document.querySelector('#patient-period-filter .filter-btn-active');
+                if (activeBtn) {
+                    activeBtn.classList.remove('filter-btn-active', 'text-white');
+                    activeBtn.classList.add('text-gray-600'); // Mery: texto inactivo
+                }
+                btn.classList.add('filter-btn-active', 'text-white');
+                btn.classList.remove('text-gray-600');
+                currentPatientFilter = btn.dataset.period;
+                renderPatients(patientSearchInput?.value || '', true);
+            }
+
+            // --- 2. COMUNICACIÓN SEGURA CON LA API (sin cambios) ---
+            async function apiFetch(endpoint, options = {}) {
+                if (!authToken) {
+                    console.error("API Fetch sin token.");
+                    handleLogout();
+                    throw new Error("No autenticado.");
+                }
+                const defaultHeaders = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                };
+                const config = {
+                    ...options,
+                    headers: {
+                        ...defaultHeaders,
+                        ...options.headers
+                    }
+                };
+                try {
+                    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+                    if (response.status === 401 || response.status === 403) {
+                        console.error("Token inválido/expirado.");
+                        handleLogout();
+                        throw new Error("Sesión expirada.");
+                    }
+                    const textResponse = await response.text();
+                    if (!response.ok) {
+                        let errorData = {
+                            error: `Error ${response.status}`,
+                            details: textResponse.substring(0, 200) + '...'
+                        };
+                        try {
+                            const parsedJson = JSON.parse(textResponse);
+                            if (parsedJson.error) errorData = parsedJson;
+                        } catch (e) { /* No JSON */ }
+                        console.error(`Error API ${response.status}:`, errorData);
+                        throw new Error(errorData.error || `Error ${response.status}`);
+                    }
+                    if (response.status === 204 || !textResponse) return null;
+                    try {
+                        return JSON.parse(textResponse);
+                    } catch (e) {
+                        console.warn("Respuesta API no-JSON:", textResponse);
+                        return textResponse;
+                    }
+                } catch (networkError) {
+                    console.error("Error de red o API:", networkError);
+                    if (networkError.message.includes("Sesión expirada")) throw networkError;
+                    const errDisp = document.getElementById('secure-login-error');
+                    if (errDisp && !loginModal?.classList.contains('hidden')) {
+                        errDisp.textContent = 'Error de conexión o credenciales inválidas.';
+                        errDisp.classList.remove('hidden');
+                    } else {
+                        showNotification("Error", networkError.message || "No se pudo conectar con el servidor.", "error");
+                    }
+                    throw networkError;
+                }
+            }
+
+            // --- 3. OBTENCIÓN Y RENDERIZADO DE DATOS (sin cambios) ---
+            async function fetchDataAndRender(isInitialLoad = false) {
+                if (isInitialLoad && loaderContainer) loaderContainer.classList.remove('hidden');
+                try {
+                    const data = await apiFetch('/initial-data');
+                    if (!data || typeof data !== 'object') {
+                        console.warn("fetchDataAndRender: No data received.");
+                        if (loaderContainer) loaderContainer.classList.add('hidden');
+                        return;
+                    }
+                    const {
+                        doctors,
+                        appointments,
+                        clients,
+                        chatHistory
+                    } = data;
+                    allDoctors = Array.isArray(doctors) ? doctors : [];
+                    allClients = Array.isArray(clients) ? clients : [];
+                    allChatHistory = Array.isArray(chatHistory) ? chatHistory : [];
+
+                    allAppointments = Array.isArray(appointments) ? appointments.map(cita => {
+                        if (cita.fecha_hora) {
+                            const timezone = cita.timezone || DEFAULT_TIMEZONE;
+                            try {
+                                const utcDate = parseISO(cita.fecha_hora);
+                                
+                                if (!isNaN(utcDate.getTime())) return {
+                                    ...cita,
+                                    start: utcDate
+                                };
+                                console.warn("Fecha inválida para cita:", cita);
+                            } catch (e) {
+                                console.warn("Error al procesar fecha de cita:", e, cita);
+                            }
+                        }
+                        return {
+                            ...cita,
+                            start: null
+                        };
+                    }).filter(c => c.start !== null) : [];
+
+                    updateSidebarStyles();
+                    populateDoctorFilters();
+                    updateDateDisplays();
+                    const activeViewId = document.querySelector('main:not(.hidden)')?.id;
+                    if (activeViewId === 'agenda-view' || isInitialLoad) renderAgenda();
+                    if (activeViewId === 'patients-view' || isInitialLoad) {
+                        renderPatients(patientSearchInput?.value || '', isInitialLoad);
+                    }
+                    if (activeViewId === 'doctors-view' || isInitialLoad) renderDoctors();
+                    const requests = allClients.filter(c => c.solicitud_de_secretaría === true);
+                    if (requests.length > 0 && !hasShownSecretaryPopup) {
+                        showSecretaryPopup(requests);
+                        hasShownSecretaryPopup = true;
+                    } else if (requests.length === 0) {
+                        notificationPopup?.classList.add('hidden');
+                        hasShownSecretaryPopup = false;
+                    }
+                } catch (error) {
+                    console.error("Fallo carga datos:", error);
+                    if (error.message && !error.message.includes("Sesión expirada")) {
+                        showNotification("Error de Carga", `No se pudieron cargar los datos: ${error.message}`, "error");
+                    }
+                } finally {
+                    if (loaderContainer) loaderContainer.classList.add('hidden');
+                    if (authToken && agendaGridEl) agendaGridEl.classList.remove('hidden');
+                }
+            }
+
+            // --- 4. FUNCIONES DE RENDERIZADO ---
+            
+            // Render Agenda (CSS maneja colores)
+            function renderAgenda() {
+                if (!agendaGridEl) return;
+                agendaGridEl.innerHTML = '';
+                const doctorFilterSelect = document.getElementById('doctor-filter');
+                const doctorFilter = doctorFilterSelect ? doctorFilterSelect.value : 'all';
+                const visibleDoctors = doctorFilter === 'all' ? allDoctors : allDoctors.filter(d => String(d.id) === String(doctorFilter));
+                if (visibleDoctors.length === 0) {
+                    agendaGridEl.innerHTML = '<p class="p-4 text-center text-gray-500">No hay profesionales para mostrar.</p>';
+                    return;
+                }
+                const minHour = 8,
+                    maxHour = 18;
+                agendaGridEl.style.gridTemplateColumns = `minmax(50px, auto) repeat(${visibleDoctors.length}, minmax(180px, 1fr))`;
+                const timeColumn = document.createElement('div');
+                timeColumn.className = 'col-start-1 sticky top-0 z-10';
+                /* Mery: Header de agenda claro */
+                timeColumn.innerHTML = `<div class="h-24 flex items-center justify-center border-r border-b border-gray-200 bg-white"></div>`;
+                for (let h = minHour; h < maxHour; h++) {
+                    ['00', '30'].forEach(m => {
+                        const slot = document.createElement('div');
+                        /* Mery: Bordes claros */
+                        slot.className = `h-12 border-r border-gray-200 flex items-start justify-end pr-2 text-xs text-gray-500 ${m === '00' ? 'border-t' : ''}`;
+                        if (m === '00') slot.textContent = `${String(h).padStart(2,'0')}:00`;
+                        timeColumn.appendChild(slot);
+                    });
+                }
+                agendaGridEl.appendChild(timeColumn);
+                visibleDoctors.forEach((doctor, index) => {
+                    const docCol = document.createElement('div');
+                    docCol.className = `col-start-${index + 2} relative`;
+                    docCol.dataset.doctorId = doctor.id;
+                    /* Mery: Header claro, Inactivo en rojo claro */
+                    const headerClass = doctor.activo ? "bg-white" : "bg-red-100";
+                    docCol.innerHTML = `<div class="h-24 sticky top-0 ${headerClass} z-10 border-b ${index + 1 < visibleDoctors.length ? 'border-r' : ''} border-gray-200 p-2 flex flex-col justify-center items-center text-center">
+                        <p class="font-semibold text-sm text-gray-900">${doctor.nombre}</p>
+                        <p class="text-xs ${doctor.activo ? 'text-gray-500' : 'text-red-700 font-semibold'}">${doctor.activo ? (doctor.especialidad || 'General') : 'Inactivo'}</p>
+                    </div>`;
+                    if (!doctor.activo) {
+                        const inactiveOverlay = document.createElement('div');
+                        inactiveOverlay.className = 'absolute inset-x-0 top-24 bottom-0 inactive-doctor-column z-30 pointer-events-none';
+                        docCol.appendChild(inactiveOverlay);
+                    }
+                    const startMinutes = doctor.activo ? timeToMinutes(doctor.horario_inicio) : -1;
+                    const endMinutes = doctor.activo ? timeToMinutes(doctor.horario_fin) : -1;
+                    for (let h = minHour; h < maxHour; h++) {
+                        ['00', '30'].forEach(m => {
+                            const slot = document.createElement('div');
+                            const currentSlotMinutes = h * 60 + parseInt(m, 10);
+                            const isWorkingHour = doctor.activo && currentSlotMinutes >= startMinutes && currentSlotMinutes < endMinutes;
+                            /* Mery: Bordes claros */
+                            slot.className = `agenda-slot h-12 border-t ${index + 1 < visibleDoctors.length ? 'border-r' : ''} border-gray-200 ${isWorkingHour ? 'cursor-pointer' : ''}`;
+                            slot.dataset.time = `${String(h).padStart(2,'0')}:${m}`;
+                            slot.dataset.doctorId = doctor.id;
+                            if (!isWorkingHour && doctor.activo) slot.classList.add('out-of-hours-slot');
+                            docCol.appendChild(slot);
+                        });
+                    }
+                    agendaGridEl.appendChild(docCol);
+                });
+                renderAppointments(visibleDoctors.map(d => d.id), minHour);
+            }
+
+            // Render Citas (con colores claros)
+            function renderAppointments(visibleDoctorIds, gridStartHour) {
+                if (!agendaGridEl) return;
+                agendaGridEl.querySelectorAll('.appointment-card').forEach(el => el.remove());
+                
+                /* MERY: Colores de estado para tema claro */
+                const statusColors = {
+                    'programada': 'border-yellow-500 bg-yellow-50 hover:bg-yellow-100 text-yellow-800',
+                    'confirmada': 'border-green-500 bg-green-50 hover:bg-green-100 text-green-800',
+                    'cancelada': 'border-red-500 bg-red-50 hover:bg-red-100 text-red-800 line-through opacity-70',
+                    'completada': 'border-blue-500 bg-blue-50 hover:bg-blue-100 text-blue-800 opacity-80',
+                    'no_asistio': 'border-gray-400 bg-gray-50 hover:bg-gray-100 text-gray-500'
+                };
+
+                const todayApts = allAppointments.filter(apt =>
+                    apt.start instanceof Date && !isNaN(apt.start) &&
+                    formatInTimeZone(apt.start, DEFAULT_TIMEZONE, 'yyyy-MM-dd') === formatInTimeZone(currentDate, DEFAULT_TIMEZONE, 'yyyy-MM-dd') &&
+                    apt.doctor && apt.cliente && visibleDoctorIds.includes(apt.doctor.id)
+                );
+                todayApts.forEach(apt => {
+                    const docCol = agendaGridEl.querySelector(`div[data-doctor-id="${apt.doctor.id}"]`);
+                    if (!docCol) return;
+                    const aptEl = document.createElement('div');
+                    aptEl.className = `appointment-card absolute ${statusColors[apt.estado] || 'border-gray-400 bg-gray-50 hover:bg-gray-100'} border-l-4 p-2 rounded-md shadow-lg cursor-pointer overflow-hidden z-20 transition-colors`;
+                    aptEl.dataset.appointmentId = apt.id;
+
+                    const timezone = apt.timezone || DEFAULT_TIMEZONE;
+                    const localDateTimeString = formatInTimeZone(apt.start, timezone, 'yyyy-MM-dd HH:mm');
+                    const aptStartDateLocal = parseISO(localDateTimeString); 
+                    
+                    const startMinutes = aptStartDateLocal.getHours() * 60 + aptStartDateLocal.getMinutes(); 
+                    const duration = (apt.duracion_minutos || 30);
+                    const topOffset = 96;
+                    const slotHeight = 48;
+                    const top = ((startMinutes - gridStartHour * 60) / 30) * slotHeight;
+                    const height = (duration / 30) * slotHeight;
+                    aptEl.style.top = `${topOffset + top}px`;
+                    aptEl.style.height = `${Math.max(slotHeight / 2, height - 4)}px`;
+                    aptEl.style.left = '4px';
+                    aptEl.style.right = '4px';
+                    
+                    const timeString = formatInTimeZone(apt.start, timezone, 'HH:mm');
+                    
+                    /* MERY: Texto oscuro para citas */
+                    aptEl.innerHTML = `<p class="font-semibold text-xs text-gray-900 truncate">${apt.cliente.nombre}</p>
+                                       <p class="text-[10px] text-gray-700 opacity-80 truncate">${apt.descripcion || 'Sin descripción'}</p>
+                                       ${height >= slotHeight ? `<p class="text-[10px] text-gray-500 mt-1">${timeString}</p>` : ''}`;
+                    
+                    aptEl.title = `Paciente: ${apt.cliente.nombre}\nDoctor: ${apt.doctor.nombre}\nHora: ${timeString}\nDuración: ${duration} min\nEstado: ${apt.estado}\nDescripción: ${apt.descripcion || 'N/A'}`;
+                    
+                    const doctor = allDoctors.find(d => d.id === apt.doctor.id);
+                    if (doctor && doctor.activo) {
+                        const docStartMin = timeToMinutes(doctor.horario_inicio);
+                        const docEndMin = timeToMinutes(doctor.horario_fin);
+                        if (startMinutes < docStartMin || (startMinutes + duration) > docEndMin) {
+                            aptEl.innerHTML += `<i class="fas fa-exclamation-triangle text-yellow-500 text-[10px] absolute top-1 right-1" title="Cita fuera del horario del doctor (${doctor.horario_inicio} - ${doctor.horario_fin})"></i>`;
+                        }
+                    }
+                    docCol.appendChild(aptEl);
+                });
+            }
+
+            // Render Pacientes (con tema claro)
+            function renderPatients(searchTerm = '', resetIndex = true) {
+                if (!patientsContainer) return;
+                if (resetIndex) {
+                    patientAppointmentIndex = {};
+                }
+                const lowerCaseSearch = searchTerm.toLowerCase();
+                const clientsWithAppointments = allClients.map(client => {
+                    const appointments = allAppointments
+                        .filter(apt => apt.cliente?.id === client.id)
+                        .sort((a, b) => b.start - a.start);
+                    if (patientAppointmentIndex[client.id] === undefined) {
+                        patientAppointmentIndex[client.id] = 0;
+                    }
+                    return {
+                        ...client,
+                        appointments
+                    };
+                });
+                const filteredClients = clientsWithAppointments.filter(client => {
+                    let hasAppointments = true;
+                    if (currentPatientFilter !== 'all' && client.appointments.length > 0) {
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        let periodStart, periodEnd = new Date(today);
+                        periodEnd.setHours(23, 59, 59, 999);
+                        if (currentPatientFilter === 'day') periodStart = today;
+                        else if (currentPatientFilter === 'week') {
+                            const day = today.getDay();
+                            const diff = today.getDate() - day + (day === 0 ? -6 : 1);
+                            periodStart = new Date(today.setDate(diff));
+                            periodEnd = new Date(periodStart);
+                            periodEnd.setDate(periodStart.getDate() + 6);
+                            periodEnd.setHours(23, 59, 59, 999);
+                        } else if (currentPatientFilter === 'month') {
+                            periodStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                            periodEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
+                        }
+                        hasAppointments = client.appointments.some(a => {
+                            if (!a.start) return false;
+                            const d = new Date(a.start);
+                            return d >= periodStart && d <= periodEnd;
+                        });
+                    }
+                    const matchesSearch = client.nombre.toLowerCase().includes(lowerCaseSearch) || (client.dni && client.dni.includes(lowerCaseSearch));
+                    return hasAppointments && matchesSearch;
+                });
+
+                /* MERY: Tabla clara */
+                if (filteredClients.length === 0) {
+                    patientsContainer.innerHTML = `<div class="bg-white p-6 text-center text-gray-500 rounded-lg border border-gray-200">No se encontraron pacientes...</div>`;
+                    return;
+                }
+                let html = `<div id="patients-table-container" class="bg-white rounded-lg overflow-hidden border border-gray-200">
+                    <table id="patients-table" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-100 sticky top-0 z-10">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paciente</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cita (Reciente primero)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Doctor</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado Cita</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Horario</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">`;
+                
+                filteredClients.forEach(client => {
+                    const totalAppointments = client.appointments.length;
+                    let currentIndex = patientAppointmentIndex[client.id] || 0;
+                    if (currentIndex >= totalAppointments) {
+                        currentIndex = totalAppointments > 0 ? totalAppointments - 1 : 0;
+                    }
+                    patientAppointmentIndex[client.id] = currentIndex;
+                    const relevantAppointment = client.appointments[currentIndex];
+                    const prevDisabled = currentIndex >= totalAppointments - 1 ? 'disabled' : '';
+                    const nextDisabled = currentIndex <= 0 ? 'disabled' : '';
+                    
+                    /* MERY: Colores de estado claros */
+                    const estadoClasses = {
+                        'programada': 'text-yellow-600',
+                        'confirmada': 'text-green-600',
+                        'cancelada': 'text-red-600 line-through',
+                        'completada': 'text-blue-600',
+                        'no_asistio': 'text-gray-500',
+                        'default': 'text-gray-500'
+                    };
+                    const estadoClass = estadoClasses[relevantAppointment?.estado] || estadoClasses['default'];
+                    
+                    const timezone = relevantAppointment?.timezone || DEFAULT_TIMEZONE;
+                    const horaCitaLocal = relevantAppointment?.start ? formatInTimeZone(relevantAppointment.start, timezone, 'HH:mm') : 'N/A';
+                    const fechaCitaLocal = relevantAppointment?.start ? formatInTimeZone(relevantAppointment.start, timezone, 'dd/MM/yyyy') : '';
+                    
+                    html += `<tr class="hover:bg-gray-50 group">
+                        <!-- MERY: Texto oscuro, hover claro -->
+                        <td class="px-6 py-4 whitespace-nowrap cursor-pointer group-hover:bg-gray-50" onclick="toggleChat(${client.id})">
+                            <div class="text-sm font-medium text-gray-900">${client.nombre}</div>
+                            <div class="text-xs text-gray-500">${client.dni || 'Sin DNI'}</div>
+                            <!-- MERY: Alerta roja clara -->
+                            ${client.solicitud_de_secretaría ? '<span class="mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700"><i class="fas fa-bell mr-1"></i> Atender</span>' : ''}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            ${totalAppointments > 0 ? `<div class="flex items-center justify-between">
+                                <button ${prevDisabled} onclick="changeAppointment(${client.id}, 1)" class="p-1 text-gray-400 hover:text-gray-800 disabled:opacity-30 disabled:cursor-not-allowed"><i class="fas fa-chevron-left"></i></button>
+                                <span class="text-center text-xs"> Cita ${currentIndex + 1}/${totalAppointments}<br> <span class="font-medium text-gray-700">${fechaCitaLocal}</span> </span>
+                                <button ${nextDisabled} onclick="changeAppointment(${client.id}, -1)" class="p-1 text-gray-400 hover:text-gray-800 disabled:opacity-30 disabled:cursor-not-allowed"><i class="fas fa-chevron-right"></i></button>
+                            </div>` : 'Sin Citas'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${relevantAppointment?.doctor?.nombre || 'N/A'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ${estadoClass}">${relevantAppointment?.estado?.charAt(0).toUpperCase() + relevantAppointment?.estado?.slice(1).replace('_', ' ') || 'N/A'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${horaCitaLocal}</td>
+                    </tr>
+                    <!-- MERY: Fondo de chat gris claro -->
+                    <tr id="chat-row-${client.id}" class="hidden"><td colspan="5" class="p-0 bg-gray-100"><div id="chat-container-${client.id}"></div></td></tr>`;
+                });
+                patientsContainer.innerHTML = html + `</tbody></table></div>`;
+            }
+
+            // Render Doctores (con tema claro)
+            function renderDoctors() {
+                if (!doctorsContainer) return;
+                /* MERY: Tabla clara */
+                if (allDoctors.length === 0) {
+                    doctorsContainer.innerHTML = `<div class="bg-white p-6 text-center text-gray-500 rounded-lg border border-gray-200">No hay doctores registrados.</div>`;
+                    return;
+                }
+                let html = `<div class="bg-white rounded-lg overflow-x-auto border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-100 sticky top-0 z-10">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Especialidad</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Horario Laboral</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">`;
+                allDoctors.forEach(doctor => {
+                    html += `<tr class="hover:bg-gray-50 cursor-pointer" onclick="openDoctorModal(${doctor.id})">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">${doctor.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${sanitize(doctor.nombre)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${sanitize(doctor.especialidad) || 'N/A'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <!-- MERY: Badges claros -->
+                            ${doctor.activo ? '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-700">Activo</span>' : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-700">Inactivo</span>'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${doctor.horario_inicio || 'N/A'} - ${doctor.horario_fin || 'N/A'}</td>
+                    </tr>`;
+                });
+                doctorsContainer.innerHTML = html + `</tbody></table></div>`;
+            }
+
+            // --- 5. MANEJO DE EVENTOS Y ACCIONES ---
+            
+            // Toggle Chat (con tema claro)
+            function toggleChat(clientId) {
+                const client = allClients.find(c => c.id === clientId);
+                if (!client) return;
+                const chatRow = document.getElementById(`chat-row-${clientId}`);
+                if (!chatRow) return;
+                const isOpen = !chatRow.classList.contains('hidden');
+                document.querySelectorAll('[id^=chat-row-]').forEach(row => {
+                    if (row.id !== `chat-row-${clientId}`) row.classList.add('hidden');
+                });
+                if (isOpen) {
+                    chatRow.classList.add('hidden');
+                    return;
+                }
+                chatRow.classList.remove('hidden');
+                const chatContainer = document.getElementById(`chat-container-${clientId}`);
+                if (!chatContainer) return;
+                chatContainer.innerHTML = '<div class="p-4 text-center text-gray-500">Cargando historial...</div>';
+                const clientPhoneDigits = client.telefono ? client.telefono.replace(/\D/g, '') : null;
+                const clientChat = clientPhoneDigits ? allChatHistory.filter(c => c.session_id && String(c.session_id).replace(/\D/g, '') === clientPhoneDigits) : [];
+                clientChat.sort((a, b) => (a.id || 0) - (b.id || 0));
+                
+                /* MERY: Chat con borde claro */
+                let chatHtml = `<div class="p-4 space-y-3 max-h-96 overflow-y-auto border-t border-gray-200">`;
+                if (clientChat.length === 0) {
+                    chatHtml += `<div class="p-4 text-center text-gray-500">No hay historial de chat para este paciente.</div>`;
+                } else {
+                    clientChat.forEach(entry => {
+                        const message = entry.message;
+                        if (!message || typeof message.content !== 'string') return;
+                        let displayContent = '';
+                        let isUser = message.type === 'human';
+                        if (isUser) {
+                            const textStartMarker = "Mensaje del paciente en texto: ";
+                            const textEndMarker = "\n\nMensaje del paciente en transcripción del audio:";
+                            const startIndex = message.content.indexOf(textStartMarker);
+                            if (startIndex !== -1) {
+                                const contentAfterMarker = message.content.substring(startIndex + textStartMarker.length);
+                                const endIndex = contentAfterMarker.indexOf(textEndMarker);
+                                if (endIndex !== -1) displayContent = contentAfterMarker.substring(0, endIndex).trim();
+                                else displayContent = contentAfterMarker.trim();
+                            } else displayContent = message.content;
+                        } else {
+                            try {
+                                const botResponse = JSON.parse(message.content);
+                                if (botResponse && botResponse.output) displayContent = [botResponse.output.mensaje_1, botResponse.output.mensaje_2, botResponse.output.mensaje_3].filter(Boolean).join(' ').trim();
+                                if (!displayContent) displayContent = message.content;
+                            } catch (e) {
+                                displayContent = message.content;
+                            }
+                        }
+                        displayContent = sanitize(displayContent);
+                        if (displayContent) {
+                            /* MERY: Colores de burbuja definidos en CSS (.chat-bubble-user, .chat-bubble-bot) */
+                            chatHtml += `<div class="flex ${isUser ? 'justify-start' : 'justify-end'}">
+                                <div class="${isUser ? 'chat-bubble-user' : 'chat-bubble-bot'} p-3 rounded-lg max-w-lg text-sm shadow break-words">${displayContent.replace(/\n/g, '<br>')}</div>
+                            </div>`;
+                        }
+                    });
+                }
+                chatHtml += '</div>';
+                const botButtonText = client.activo ? 'Desactivar Bot' : 'Activar Bot';
+                const botButtonClass = client.activo ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600';
+                const requestButtonText = client.solicitud_de_secretaría ? 'Solicitud Resuelta' : 'Solicitud Pendiente';
+                const requestButtonClass = client.solicitud_de_secretaría ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-300 text-gray-500 cursor-not-allowed';
+                
+                /* MERY: Botones claros, borde claro */
+                chatHtml += `<div class="p-4 border-t border-gray-200 flex flex-col sm:flex-row justify-end gap-3">
+                    <button onclick="toggleBotStatus(${client.id}, ${client.activo})" class="${botButtonClass} text-white font-bold py-2 px-3 rounded-lg text-xs transition-colors">${botButtonText}</button>
+                    <button onclick="toggleSecretaryRequest(${client.id}, ${client.solicitud_de_secretaría})" class="${requestButtonClass} text-white font-bold py-2 px-3 rounded-lg text-xs transition-colors" ${!client.solicitud_de_secretaría ? 'disabled' : ''}>${requestButtonText}</button>
+                </div>`;
+                
+                chatContainer.innerHTML = chatHtml;
+                const chatDiv = chatContainer.querySelector('.max-h-96');
+                if (chatDiv) chatDiv.scrollTop = chatDiv.scrollHeight;
+            }
+            window.toggleChat = toggleChat;
+
+            // Cambiar Cita (sin cambios)
+            function changeAppointment(clientId, direction) {
+                const client = allClients.find(c => c.id === clientId);
+                if (!client || !client.appointments || client.appointments.length === 0) return;
+                const total = client.appointments.length;
+                let currentIndex = patientAppointmentIndex[clientId] === undefined ? 0 : patientAppointmentIndex[clientId];
+                currentIndex += direction;
+                currentIndex = Math.max(0, Math.min(currentIndex, total - 1));
+                patientAppointmentIndex[clientId] = currentIndex;
+                renderPatients(patientSearchInput?.value || '', false);
+            }
+            window.changeAppointment = changeAppointment;
+
+            // Submit Form (sin cambios lógicos)
+            async function handleFormSubmit(e) {
+                e.preventDefault();
+                const form = e.target;
+                const id = form.querySelector('#appointment-id')?.value;
+                const isNew = !id;
+                const dateVal = form.querySelector('#start-date')?.value;
+                const timeVal = form.querySelector('#start-time')?.value;
+                if (!dateVal || !timeVal) {
+                    showNotification('Datos Incompletos', 'La fecha y la hora son obligatorias.', 'error');
+                    return;
+                }
+                
+                const localDateTimeString = `${dateVal}T${timeVal}:00`;
+                const localDate = parseISO(localDateTimeString);
+                const fechaISO = zonedTimeToUtc(localDate, DEFAULT_TIMEZONE).toISOString();
+                const fechaISO_cleaned = fechaISO.split('.')[0] + 'Z';
+                
+                console.log(`Input Local: ${localDateTimeString}`);
+                console.log(`Fecha UTC a enviar (corregida): ${fechaISO_cleaned}`);
+                
+                const doctorIdInput = form.querySelector('#doctor-id');
+                const durationInput = form.querySelector('#duration');
+                const descInput = form.querySelector('#description');
+                const dataToSave = {
+                    doctor_id: doctorIdInput ? parseInt(doctorIdInput.value) : null,
+                    fecha_hora: fechaISO_cleaned, 
+                    timezone: DEFAULT_TIMEZONE,
+                    descripcion: descInput?.value || '',
+                    duracion_minutos: durationInput ? parseInt(durationInput.value) : 30
+                };
+                if (isNaN(dataToSave.doctor_id)) {
+                    showNotification('Datos Incompletos', 'Debe seleccionar un doctor.', 'error');
+                    return;
+                }
+                if (!isNew) {
+                    const statusInput = form.querySelector('#status');
+                    if (statusInput) dataToSave.estado = statusInput.value;
+                } else {
+                    dataToSave.estado = 'programada';
+                }
+                const newNameInput = form.querySelector('#new-client-name');
+                const newDniInput = form.querySelector('#new-client-dni');
+                const newPhoneInput = form.querySelector('#new-client-telefono');
+                const existingClientInput = form.querySelector('#client-id');
+                if (isNew && !form.querySelector('#new-patient-fields')?.classList.contains('hidden')) {
+                    dataToSave.new_client_name = newNameInput?.value;
+                    dataToSave.new_client_dni = newDniInput?.value;
+                    dataToSave.new_client_telefono = newPhoneInput?.value;
+                    if (!dataToSave.new_client_name || !dataToSave.new_client_dni) {
+                        showNotification('Datos Incompletos', 'Nombre y DNI son obligatorios para nuevo paciente.', 'error');
+                        return;
+                    }
+                } else if (isNew) {
+                    dataToSave.cliente_id = existingClientInput ? parseInt(existingClientInput.value) : null;
+                    if (isNaN(dataToSave.cliente_id)) {
+                        showNotification('Datos Incompletos', 'Debe seleccionar un paciente existente.', 'error');
+                        return;
+                    }
+                }
+                const saveBtn = form.closest('.fade-in')?.querySelector('#save-btn');
+                if (saveBtn) {
+                    saveBtn.disabled = true;
+                    saveBtn.textContent = 'Guardando...';
+                }
+                try {
+                    const method = id ? 'PATCH' : 'POST';
+                    const endpoint = `/citas${id ? `/${id}` : ''}`;
+                    await apiFetch(endpoint, {
+                        method: method,
+                        body: JSON.stringify(dataToSave)
+                    });
+                    if (mainModal) mainModal.classList.add('hidden');
+                    fetchDataAndRender();
+                    showNotification("Éxito", isNew ? "Cita creada correctamente." : "Cita actualizada correctamente.", "success");
+                } catch (error) {
+                    console.error("Error en handleFormSubmit al guardar cita:", error);
+                    showNotification("Error", `No se pudo guardar la cita: ${error.message}`, "error");
+                } finally {
+                    if (saveBtn) {
+                        saveBtn.disabled = false;
+                        saveBtn.textContent = 'Guardar';
+                    }
+                }
+            }
+
+            // Eliminar Cita (sin cambios lógicos)
+            async function handleDeleteAppointment() {
+                const id = mainModal?.querySelector('#appointment-id')?.value;
+                // REEMPLAZO DE window.confirm por modal de notificación
+                if (id) {
+                    showNotification('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar esta cita? Esta acción no se puede deshacer.', 'confirm_delete', id);
+                }
+            }
+
+            // Función de confirmación modificada
+            async function confirmDeleteAppointment(id) {
+                if (!id) return;
+                try {
+                    await apiFetch(`/citas/${id}`, {
+                        method: 'DELETE'
+                    });
+                    if (mainModal) mainModal.classList.add('hidden');
+                    fetchDataAndRender();
+                    showNotification("Éxito", "Cita eliminada correctamente.", "success");
+                } catch (error) {
+                    console.error("Error eliminar cita:", error);
+                    showNotification('Error al Eliminar', `No se pudo eliminar la cita: ${error.message}`, 'error');
+                }
+            }
+
+            // Añadir Doctor (sin cambios lógicos)
+            function ensureSeconds(timeString) {
+                if (!timeString || timeString.length === 0) return null;
+                if (timeString.match(/^\d{2}:\d{2}:\d{2}$/)) return timeString;
+                if (timeString.match(/^\d{2}:\d{2}$/)) return timeString + ':00';
+                return timeString;
+            }
+
+            async function handleAddDoctor(e) {
+                e.preventDefault();
+                const nameInput = document.getElementById('doc-nombre');
+                const espInput = document.getElementById('doc-especialidad');
+                const startInput = document.getElementById('doc-horario-inicio');
+                const endInput = document.getElementById('doc-horario-fin');
+                const activeInput = document.getElementById('doc-activo');
+                if (!nameInput?.value || !startInput?.value || !endInput?.value) {
+                    showNotification('Datos Incompletos', 'Nombre, Hora de Inicio y Fin son obligatorios.', 'error');
+                    return;
+                }
+                const newDoctor = {
+                    nombre: nameInput.value,
+                    especialidad: espInput?.value || null,
+                    horario_inicio: ensureSeconds(startInput.value),
+                    horario_fin: ensureSeconds(endInput.value),
+                    activo: activeInput.checked
+                };
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Añadiendo...';
+                }
+                try {
+                    await apiFetch('/doctores', {
+                        method: 'POST',
+                        body: JSON.stringify(newDoctor)
+                    });
+                    addDoctorForm?.reset();
+                    fetchDataAndRender();
+                    showNotification("Éxito", "Doctor añadido correctamente.", "success");
+                } catch (error) {
+                    console.error("Fallo añadir doctor:", error);
+                    showNotification('Error', `No se pudo añadir el doctor: ${error.message}`, 'error');
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Añadir';
+                    }
+                }
+            }
+
+            // Submit Form Doctor (sin cambios lógicos)
+            async function handleDoctorFormSubmit(e) {
+                e.preventDefault();
+                const form = e.target;
+                const id = form.querySelector('#edit-doctor-id')?.value;
+                const espInput = form.querySelector('#edit-doc-especialidad');
+                const startInput = form.querySelector('#edit-doc-horario-inicio');
+                const endInput = form.querySelector('#edit-doc-horario-fin');
+                const activeInput = form.querySelector('#edit-doc-activo');
+                if (!id || !startInput?.value || !endInput?.value) {
+                    showNotification('Datos Incompletos', 'Hora de Inicio y Fin son obligatorios.', 'error');
+                    return;
+                }
+                const updates = {
+                    especialidad: espInput?.value || null,
+                    horario_inicio: ensureSeconds(startInput.value),
+                    horario_fin: ensureSeconds(endInput.value),
+                    activo: activeInput.checked
+                };
+                const saveBtn = form.closest('.fade-in')?.querySelector('#save-doc-btn');
+                if (saveBtn) {
+                    saveBtn.disabled = true;
+                    saveBtn.textContent = 'Guardando...';
+                }
+                try {
+                    await apiFetch(`/doctores/${id}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify(updates)
+                    });
+                    if (mainModal) mainModal.classList.add('hidden');
+                    fetchDataAndRender();
+                    showNotification("Éxito", "Doctor actualizado correctamente.", "success");
+                } catch (error) {
+                    console.error("Error actualizar doctor:", error);
+                    showNotification('Error al Actualizar', `No se pudo actualizar el doctor: ${error.message}`, 'error');
+                } finally {
+                    if (saveBtn) {
+                        saveBtn.disabled = false;
+                        saveBtn.textContent = 'Guardar Cambios';
+                    }
+                }
+            }
+
+            // Toggle Bot (sin cambios lógicos)
+            async function toggleBotStatus(clientId, currentStatus) {
+                const newStatus = !currentStatus;
+                const button = event?.target;
+                if (button) {
+                    button.disabled = true;
+                    button.textContent = 'Cambiando...';
+                }
+                try {
+                    await apiFetch(`/clientes/${clientId}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({
+                            activo: newStatus
+                        })
+                    });
+                    fetchDataAndRender();
+                    showNotification("Éxito", `Bot ${newStatus ? 'activado' : 'desactivado'} correctamente.`, "success");
+                } catch (error) {
+                    console.error("Error cambiar bot:", error);
+                    showNotification('Error', `No se pudo actualizar el estado del bot: ${error.message}`, 'error');
+                    if (button) {
+                        button.disabled = false;
+                        button.textContent = newStatus ? 'Desactivar Bot' : 'Activar Bot';
+                    }
+                }
+            }
+            window.toggleBotStatus = toggleBotStatus;
+
+            // Toggle Secretaría (sin cambios lógicos)
+            async function toggleSecretaryRequest(clientId, currentStatus) {
+                if (!currentStatus) return;
+                const newStatus = false;
+                const button = event?.target;
+                if (button) {
+                    button.disabled = true;
+                    button.textContent = 'Resolviendo...';
+                }
+                try {
+                    await apiFetch(`/clientes/${clientId}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({
+                            solicitud_de_secretaría: newStatus
+                        })
+                    });
+                    fetchDataAndRender();
+                    showNotification("Éxito", "Solicitud resuelta correctamente.", "success");
+                } catch (error) {
+                    console.error("Error cambiar solicitud:", error);
+                    showNotification('Error', `No se pudo actualizar la solicitud: ${error.message}`, 'error');
+                    if (button) {
+                        button.disabled = false;
+                        button.textContent = 'Solicitud Resuelta';
+                    }
+                }
+            }
+            window.toggleSecretaryRequest = toggleSecretaryRequest;
+
+            // Abrir Modal (con tema claro)
+            function openModal(appointment = null, slotData = null) {
+                const isNew = !appointment;
+                const clientOpts = allClients.sort((a, b) => a.nombre.localeCompare(b.nombre)).map(c => `<option value="${c.id}" ${appointment?.cliente?.id == c.id ? 'selected' : ''}>${sanitize(c.nombre)} (DNI: ${sanitize(c.dni) || 'N/A'})</option>`).join('');
+                const docOpts = allDoctors.filter(d => d.activo).sort((a, b) => a.nombre.localeCompare(b.nombre)).map(d => `<option value="${d.id}" ${(appointment?.doctor?.id || slotData?.doctorId) == d.id ? 'selected' : ''}>${sanitize(d.nombre)}</option>`).join('');
+                const appointmentDate = isNew ? currentDate : (appointment?.start || new Date());
+                const timezone = appointment?.timezone || DEFAULT_TIMEZONE;
+                const dateValue = formatInTimeZone(appointmentDate, timezone, 'yyyy-MM-dd');
+                let timeValue = slotData?.time || formatInTimeZone(appointmentDate, timezone, 'HH:mm') || '09:00';
+                let clientDni = '';
+                if (!isNew && appointment?.cliente?.id) {
+                    const c = allClients.find(cl => cl.id == appointment.cliente.id);
+                    if (c) clientDni = c.dni;
+                }
+                const statusOpts = ['programada', 'confirmada', 'cancelada', 'completada', 'no_asistio'];
+                const statusSelect = statusOpts.map(s => `<option value="${s}" ${appointment?.estado === s ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1).replace('_', ' ')}</option>`).join('');
+                if (!mainModal) return;
+
+                /* MERY: Modal claro */
+                mainModal.innerHTML = `<div class="bg-white border border-gray-200 rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col fade-in">
+					<header class="p-4 border-b border-gray-200 flex justify-between items-center">
+						<h3 class="text-lg font-semibold text-gray-900">${isNew ? 'Agendar Nueva Cita' : 'Editar Cita'}</h3>
+						<button id="close-modal-btn" class="text-gray-400 hover:text-gray-800 text-2xl">&times;</button>
+					</header>
+					<form id="appointment-form" class="flex-1 overflow-y-auto p-6 space-y-4">
+						<input type="hidden" id="appointment-id" value="${appointment?.id || ''}">
+						<!-- MERY: Tabs claras -->
+                        <div class="bg-gray-100 rounded-lg p-1 flex ${!isNew ? 'hidden' : ''}">
+							<button type="button" id="tab-existing" class="tab-active flex-1 rounded-md px-3 py-1 text-sm transition">Paciente Existente</button>
+							<button type="button" id="tab-new" class="flex-1 rounded-md px-3 py-1 text-sm text-gray-500 transition">Paciente Nuevo</button>
+						</div>
+						<div id="existing-patient-fields">
+							<label class="block text-sm font-medium text-gray-600">Paciente</label>
+							<select id="client-id" class="mt-1 w-full light-input rounded-md" ${!isNew ? 'disabled' : ''}>
+								${clientOpts}
+							</select>
+						</div>
+						<div id="new-patient-fields" class="hidden space-y-4">
+							<div>
+								<label for="new-client-name" class="block text-sm font-medium text-gray-600">Nombre Completo</label>
+								<input type="text" id="new-client-name" class="mt-1 w-full light-input rounded-md" placeholder="Ej: Juan Pérez">
+							</div>
+							<div>
+								<label for="new-client-dni" class="block text-sm font-medium text-gray-600">DNI</label>
+								<input type="text" id="new-client-dni" class="mt-1 w-full light-input rounded-md" placeholder="Ej: 12345678">
+							</div>
+							<div>
+								<label for="new-client-telefono" class="block text-sm font-medium text-gray-600">Teléfono</label>
+								<input type="text" id="new-client-telefono" class="mt-1 w-full light-input rounded-md" placeholder="Ej: +54 9 11 1234-5678">
+							</div>
+						</div>
+						<div>
+							<label for="doctor-id" class="block text-sm font-medium text-gray-600">Doctor</label>
+							<select id="doctor-id" class="mt-1 w-full light-input rounded-md">
+								${docOpts}
+							</select>
+						</div>
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+							<div>
+								<label for="start-date" class="block text-sm font-medium text-gray-600">Fecha</label>
+								<input type="date" id="start-date" value="${dateValue}" class="mt-1 w-full light-input rounded-md" required>
+							</div>
+							<div>
+								<label for="start-time" class="block text-sm font-medium text-gray-600">Hora</label>
+								<input type="time" id="start-time" value="${timeValue}" class="mt-1 w-full light-input rounded-md" required>
+							</div>
+						</div>
+						<div>
+							<label for="duration" class="block text-sm font-medium text-gray-600">Duración (minutos)</label>
+							<input type="number" id="duration" value="${appointment?.duracion_minutos || 30}" min="15" step="15" class="mt-1 w-full light-input rounded-md">
+						</div>
+						<div ${isNew ? 'class="hidden"' : ''}>
+							<label for="status" class="block text-sm font-medium text-gray-600">Estado</label>
+							<select id="status" class="mt-1 w-full light-input rounded-md">
+								${statusSelect}
+							</select>
+						</div>
+						<div>
+							<label for="description" class="block text-sm font-medium text-gray-600">Descripción</label>
+							<textarea id="description" class="mt-1 w-full light-input rounded-md resize-y" rows="3">${appointment?.descripcion || ''}</textarea>
+						</div>
+					</form>
+                    <!-- MERY: Footer claro, botones fucsia y gris -->
+					<footer class="p-4 border-t border-gray-200 bg-gray-50 flex justify-between">
+						<button type="button" id="save-btn" class="bg-[#FF00A8] text-white font-semibold px-4 py-2 rounded-lg hover:bg-[#E60097] transition-colors">Guardar</button>
+						<div class="space-x-2">
+							${isNew ? '' : '<button type="button" id="delete-btn" class="bg-red-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">Eliminar</button>'}
+							<button type="button" id="cancel-btn" class="bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors">Cancelar</button>
+						</div>
+					</footer>
+				</div>`;
+                mainModal.classList.remove('hidden');
+                const form = mainModal.querySelector('#appointment-form');
+                const tabExisting = mainModal.querySelector('#tab-existing');
+                const tabNew = mainModal.querySelector('#tab-new');
+                const existingFields = mainModal.querySelector('#existing-patient-fields');
+                const newFields = mainModal.querySelector('#new-patient-fields');
+                const closeBtn = mainModal.querySelector('#close-modal-btn');
+                const saveBtn = mainModal.querySelector('#save-btn');
+                const cancelBtn = mainModal.querySelector('#cancel-btn');
+                const deleteBtn = mainModal.querySelector('#delete-btn');
+
+                const toggleTabs = (activeTab) => {
+                    if (!isNew) return;
+                    tabExisting.classList.toggle('tab-active', activeTab === 'existing');
+                    tabExisting.classList.toggle('text-gray-500', activeTab !== 'existing');
+                    tabNew.classList.toggle('tab-active', activeTab === 'new');
+                    tabNew.classList.toggle('text-gray-500', activeTab !== 'new');
+                    existingFields.classList.toggle('hidden', activeTab !== 'existing');
+                    newFields.classList.toggle('hidden', activeTab === 'new');
+                };
+
+                tabExisting?.addEventListener('click', () => toggleTabs('existing'));
+                tabNew?.addEventListener('click', () => toggleTabs('new'));
+                form?.addEventListener('submit', handleFormSubmit);
+                saveBtn?.addEventListener('click', () => form.dispatchEvent(new Event('submit')));
+                cancelBtn?.addEventListener('click', () => mainModal.classList.add('hidden'));
+                closeBtn?.addEventListener('click', () => mainModal.classList.add('hidden'));
+                deleteBtn?.addEventListener('click', handleDeleteAppointment);
+                mainModal.addEventListener('click', (e) => {
+                    if (e.target === mainModal) mainModal.classList.add('hidden');
+                });
+            }
+            window.openModal = openModal;
+
+            // Abrir Modal Doctor (con tema claro)
+            function openDoctorModal(doctorId) {
+                const doctor = allDoctors.find(d => d.id === doctorId);
+                if (!doctor) return;
+                if (!mainModal) return;
+
+                /* MERY: Modal claro */
+                mainModal.innerHTML = `<div class="bg-white border border-gray-200 rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col fade-in">
+					<header class="p-4 border-b border-gray-200 flex justify-between items-center">
+						<h3 class="text-lg font-semibold text-gray-900">Editar Doctor</h3>
+						<button id="close-modal-btn" class="text-gray-400 hover:text-gray-800 text-2xl">&times;</button>
+					</header>
+					<form id="edit-doctor-form" class="flex-1 overflow-y-auto p-6 space-y-4">
+						<input type="hidden" id="edit-doctor-id" value="${doctor.id}">
+						<div>
+							<label for="edit-doc-nombre" class="block text-sm font-medium text-gray-600">Nombre Completo</label>
+							<input type="text" id="edit-doc-nombre" value="${sanitize(doctor.nombre)}" class="mt-1 w-full light-input rounded-md bg-gray-100" disabled>
+						</div>
+						<div>
+							<label for="edit-doc-especialidad" class="block text-sm font-medium text-gray-600">Especialidad</label>
+							<input type="text" id="edit-doc-especialidad" value="${sanitize(doctor.especialidad) || ''}" class="mt-1 w-full light-input rounded-md">
+						</div>
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+							<div>
+								<label for="edit-doc-horario-inicio" class="block text-sm font-medium text-gray-600">Inicio Jornada</label>
+								<input type="time" id="edit-doc-horario-inicio" value="${doctor.horario_inicio || ''}" class="mt-1 w-full light-input rounded-md" required>
+							</div>
+							<div>
+								<label for="edit-doc-horario-fin" class="block text-sm font-medium text-gray-600">Fin Jornada</label>
+								<input type="time" id="edit-doc-horario-fin" value="${doctor.horario_fin || ''}" class="mt-1 w-full light-input rounded-md" required>
+							</div>
+						</div>
+						<div class="flex items-center">
+                            <!-- MERY: Checkbox fucsia -->
+							<input type="checkbox" id="edit-doc-activo" class="h-4 w-4 rounded bg-gray-100 border-gray-300 text-[#FF00A8] focus:ring-[#FF00A8]" ${doctor.activo ? 'checked' : ''}>
+							<label for="edit-doc-activo" class="ml-2 text-sm font-medium text-gray-700">Activo</label>
+						</div>
+					</form>
+                    <!-- MERY: Footer claro -->
+					<footer class="p-4 border-t border-gray-200 bg-gray-50 flex justify-between">
+						<button type="button" id="save-doc-btn" class="bg-[#FF00A8] text-white font-semibold px-4 py-2 rounded-lg hover:bg-[#E60097] transition-colors">Guardar Cambios</button>
+						<button type="button" id="cancel-btn" class="bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors">Cancelar</button>
+					</footer>
+				</div>`;
+                mainModal.classList.remove('hidden');
+                const form = mainModal.querySelector('#edit-doctor-form');
+                const saveBtn = mainModal.querySelector('#save-doc-btn');
+                const cancelBtn = mainModal.querySelector('#cancel-btn');
+                const closeBtn = mainModal.querySelector('#close-modal-btn');
+                form?.addEventListener('submit', handleDoctorFormSubmit);
+                saveBtn?.addEventListener('click', () => form.dispatchEvent(new Event('submit')));
+                cancelBtn?.addEventListener('click', () => mainModal.classList.add('hidden'));
+                closeBtn?.addEventListener('click', () => mainModal.classList.add('hidden'));
+                mainModal.addEventListener('click', (e) => {
+                    if (e.target === mainModal) mainModal.classList.add('hidden');
+                });
+            }
+            window.openDoctorModal = openDoctorModal;
+
+            // Popup Secretaría (con tema claro)
+            function showSecretaryPopup(requests) {
+                if (!notificationPopup) return;
+                /* MERY: Popup claro */
+                let html = `<div class="p-4">
+					<div class="flex justify-between items-center mb-4">
+						<h3 class="text-lg font-semibold text-gray-900">Solicitudes Pendientes</h3>
+						<button id="close-notification-popup" class="text-gray-400 hover:text-gray-800 text-2xl">&times;</button>
+					</div>
+					<div class="space-y-3 max-h-[300px] overflow-y-auto">`;
+                requests.forEach(client => {
+                    html += `<div class="flex items-center justify-between p-3 bg-gray-100 rounded-lg">
+						<div>
+							<p class="text-sm font-medium text-gray-900">${sanitize(client.nombre)}</p>
+							<p class="text-xs text-gray-500">DNI: ${sanitize(client.dni) || 'N/A'}</p>
+						</div>
+                        <!-- MERY: Botón fucsia -->
+						<button onclick="toggleSecretaryRequest(${client.id}, true)" class="bg-[#FF00A8] text-white font-semibold px-3 py-1 rounded-lg text-sm hover:bg-[#E60097] transition-colors">Resolver</button>
+					</div>`;
+                });
+                html += `</div></div>`;
+                notificationPopup.innerHTML = html;
+                notificationPopup.classList.remove('hidden');
+                document.getElementById('secretary-notification-dot')?.classList.remove('hidden');
+                const closeBtn = notificationPopup.querySelector('#close-notification-popup');
+                closeBtn?.addEventListener('click', () => notificationPopup.classList.add('hidden'));
+            }
+
+            // Notificación (con acento fucsia)
+            function showNotification(title, message, type, deleteId = null) {
+                if (!notificationModal || !notificationModalTitle || !notificationModalBody || !notificationModalBtn) return;
+                notificationModalTitle.textContent = title;
+                notificationModalBody.textContent = message;
+                
+                // Limpiar botones extra
+                const extraButtons = notificationModal.querySelectorAll('.extra-btn');
+                extraButtons.forEach(btn => btn.remove());
+
+                if (type === 'error') {
+                    notificationModalBtn.className = `bg-red-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-700 transition-colors`;
+                    notificationModalBtn.textContent = 'Entendido';
+                    notificationModalBtn.onclick = () => notificationModal.classList.add('hidden');
+                } else if (type === 'confirm_delete' && deleteId) {
+                    // Botón principal (Cancelar)
+                    notificationModalBtn.className = `bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors`;
+                    notificationModalBtn.textContent = 'Cancelar';
+                    notificationModalBtn.onclick = () => notificationModal.classList.add('hidden');
+
+                    // Botón de confirmación (Eliminar)
+                    const confirmBtn = document.createElement('button');
+                    confirmBtn.className = 'extra-btn bg-red-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-700 transition-colors ml-2';
+                    confirmBtn.textContent = 'Eliminar';
+                    confirmBtn.onclick = () => {
+                        notificationModal.classList.add('hidden');
+                        confirmDeleteAppointment(deleteId); // Llama a la función de borrado
+                    };
+                    notificationModalBtn.after(confirmBtn);
+
+                } else { // 'success' y otros
+                    notificationModalBtn.className = `bg-[#FF00A8] text-white font-semibold px-4 py-2 rounded-lg hover:bg-[#E60097] transition-colors`;
+                    notificationModalBtn.textContent = 'Entendido';
+                    notificationModalBtn.onclick = () => notificationModal.classList.add('hidden');
+                }
+                
+                notificationModal.classList.remove('hidden');
+            }
+
+
+            // Estilos Sidebar (con acento fucsia)
+            function updateSidebarStyles() {
+                const links = [agendaLink, patientsLink, doctorsLink];
+                const views = [agendaView, patientsView, doctorsView];
+                const activeViewId = views.find(view => !view.classList.contains('hidden'))?.id;
+                
+                links.forEach(link => {
+                    if (link) {
+                        /* MERY: Limpieza de estilos fucsia */
+                        link.classList.remove('border-[#FF00A8]', 'bg-[#FF00A8]/10', 'text-gray-900', 'font-semibold', 'neon-aura-pink');
+                        link.classList.add('border-transparent', 'text-gray-600', 'neon-aura');
+                    }
+                });
+
+                /* MERY: Aplicación de estilos fucsia */
+                const linkToActivate = activeViewId === 'agenda-view' ? agendaLink : activeViewId === 'patients-view' ? patientsLink : doctorsLink;
+                if (linkToActivate) {
+                    linkToActivate.classList.add('border-[#FF00A8]', 'bg-[#FF00A8]/10', 'text-gray-900', 'font-semibold', 'neon-aura-pink');
+                    linkToActivate.classList.remove('border-transparent', 'text-gray-600', 'neon-aura');
+                }
+
+                const requests = allClients.filter(c => c.solicitud_de_secretaría === true);
+                const notificationDot = document.getElementById('secretary-notification-dot');
+                if (notificationDot) {
+                    notificationDot.classList.toggle('hidden', requests.length === 0);
+                }
+                if (sidebar?.classList.contains('open') && window.innerWidth < 768) {
+                    toggleSidebar();
+                }
+            }
+
+            // Filtros Doctor (sin cambios)
+            function populateDoctorFilters() {
+                const doctorFilter = document.getElementById('doctor-filter');
+                if (!doctorFilter) return;
+                const currentValue = doctorFilter.value;
+                doctorFilter.innerHTML = `<option value="all">Todos los profesionales</option>`;
+                allDoctors.sort((a, b) => a.nombre.localeCompare(b.nombre)).forEach(doctor => {
+                    const opt = document.createElement('option');
+                    opt.value = doctor.id;
+                    opt.textContent = `${doctor.nombre} (${doctor.especialidad || 'General'})`;
+                    opt.selected = String(doctor.id) === String(currentValue);
+                    doctorFilter.appendChild(opt);
+                });
+            }
+
+            // Fechas (sin cambios)
+            function updateDateDisplays() {
+                const currentDateAgenda = document.getElementById('current-date-agenda');
+                if (currentDateAgenda) {
+                    currentDateAgenda.textContent = formatInTimeZone(currentDate, DEFAULT_TIMEZONE, 'EEEE, d MMMM yyyy');
+                }
+            }
+
+            // Navegación (sin cambios)
+            function setupNavigationListeners() {
+                agendaLink?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    [agendaView, patientsView, doctorsView].forEach(view => view?.classList.add('hidden'));
+                    agendaView?.classList.remove('hidden');
+                    updateSidebarStyles();
+                    renderAgenda();
+                });
+                patientsLink?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    [agendaView, patientsView, doctorsView].forEach(view => view?.classList.add('hidden'));
+                    patientsView?.classList.remove('hidden');
+                    updateSidebarStyles();
+                    renderPatients(patientSearchInput?.value || '');
+                });
+                doctorsLink?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    [agendaView, patientsView, doctorsView].forEach(view => view?.classList.add('hidden'));
+                    doctorsView?.classList.remove('hidden');
+                    updateSidebarStyles();
+                    renderDoctors();
+                });
+            }
+
+            // Controles Fecha (sin cambios)
+            function setupDateControls() {
+                const prevDayBtn = document.getElementById('prev-day-agenda');
+                const nextDayBtn = document.getElementById('next-day-agenda');
+                const todayBtn = document.getElementById('today-btn-agenda');
+                prevDayBtn?.addEventListener('click', () => {
+                    currentDate.setDate(currentDate.getDate() - 1);
+                    currentDate.setHours(0, 0, 0, 0); 
+                    updateDateDisplays();
+                    renderAgenda();
+                });
+                nextDayBtn?.addEventListener('click', () => {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    currentDate.setHours(0, 0, 0, 0); 
+                    updateDateDisplays();
+                    renderAgenda();
+                });
+                todayBtn?.addEventListener('click', () => {
+                    currentDate = new Date();
+                    currentDate.setHours(0, 0, 0, 0);
+                    updateDateDisplays();
+                    renderAgenda();
+                });
+            }
+
+            // Listeners Agenda (sin cambios)
+            function setupAgendaListeners() {
+                const addAppointmentBtn = document.getElementById('add-appointment-btn');
+                addAppointmentBtn?.addEventListener('click', () => openModal(null));
+                agendaGridEl?.addEventListener('click', (e) => {
+                    const slot = e.target.closest('.agenda-slot');
+                    if (!slot || slot.classList.contains('out-of-hours-slot')) return;
+                    const doctorId = parseInt(slot.dataset.doctorId);
+                    const time = slot.dataset.time;
+                    openModal(null, {
+                        doctorId,
+                        time
+                    });
+                });
+                agendaGridEl?.addEventListener('click', (e) => {
+                    const appointmentEl = e.target.closest('.appointment-card');
+                    if (!appointmentEl) return;
+                    const appointmentId = parseInt(appointmentEl.dataset.appointmentId);
+                    const appointment = allAppointments.find(apt => apt.id === appointmentId);
+                    if (appointment) openModal(appointment);
+                });
+            }
+
+            // Utils (sin cambios)
+            function timeToMinutes(time) {
+                if (!time) return 0;
+                const parts = time.split(':').map(Number);
+                const hours = parts[0];
+                const minutes = parts[1] || 0;
+                return hours * 60 + minutes;
+            }
+
+            function sanitize(str) {
+                if (!str) return '';
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mery Centro Estético - Una Experiencia en Belleza</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome (para iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Fuente (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilo personalizado para la fuente Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Color de acento personalizado */
+        .text-mery-pink {
+            color: #FF00A8;
+        }
+        .bg-mery-pink {
+            background-color: #FF00A8;
+        }
+        .border-mery-pink {
+            border-color: #FF00A8;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-gray-800">
+
+    <!-- ===== 1. Barra de Navegación (Header) ===== -->
+    <!-- Se mantiene fija en la parte superior con un fondo difuminado para un look moderno -->
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="text-3xl font-bold text-gray-900">
+                Mery
+            </a>
+
+            <!-- Navegación (Desktop) -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#tratamientos" class="text-gray-600 hover:text-mery-pink transition-colors">Tratamientos</a>
+                <a href="#membresias" class="text-gray-600 hover:text-mery-pink transition-colors">Membresías</a>
+                <a href="#nosotros" class="text-gray-600 hover:text-mery-pink transition-colors">Nosotros</a>
+                <a href="#contacto" class="text-gray-600 hover:text-mery-pink transition-colors">Contacto</a>
+            </div>
+
+            <!-- Botón de Reserva (CTA Principal) -->
+            <a href="#" class="hidden md:block bg-mery-pink text-white font-semibold px-5 py-2 rounded-full hover:bg-opacity-90 transition-all shadow-md">
+                Reservar Ahora
+            </a>
+
+            <!-- Botón de Menú (Móvil) -->
+            <button class="md:hidden text-gray-800 text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== 2. Sección "Hero" (Portada Principal) ===== -->
+    <header class="container mx-auto px-6 py-20 md:py-32">
+        <div class="flex flex-col md:flex-row items-center gap-12">
+            <!-- Texto del Hero -->
+            <div class="md:w-1/2 text-center md:text-left">
+                <span class="text-mery-pink font-semibold">BIENVENIDOS A MERY</span>
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mt-2 mb-6 leading-tight">
+                    Una Experiencia en Belleza y Bienestar
+                </h1>
+                <p class="text-lg text-gray-600 mb-8">
+                    Un espacio único en Punta del Este, diseñado para tu desconexión y disfrute. Tecnología avanzada y un equipo certificado para cuidarte.
+                </p>
+                <a href="#" class="bg-mery-pink text-white font-bold px-8 py-3 rounded-full text-lg hover:bg-opacity-90 transition-all shadow-lg">
+                    Hacé tu Reserva
+                </a>
+            </div>
+            <!-- Imagen del Hero -->
+            <!-- REEMPLAZAR: Cambia esta imagen por una foto profesional de tu centro -->
+            <div class="md:w-1/2 mt-10 md:mt-0">
+                <img src="https://placehold.co/600x400/FF00A8/white?text=Ambiente+de+Spa" 
+                     alt="Ambiente del centro estético Mery" 
+                     class="rounded-2xl shadow-2xl w-full object-cover h-96">
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== 3. Sección de Tratamientos ===== -->
+    <section id="tratamientos" class="bg-gray-50 py-24">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Nuestros Tratamientos</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+                Descubre nuestra gama de servicios diseñados para tu salud y bienestar, aplicados por personal certificado.
+            </p>
+
+            <!-- Grid de Servicios -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Tarjeta de Servicio 1: Faciales -->
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow text-left">
+                    <i class="fas fa-smile text-mery-pink text-3xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Faciales</h3>
+                    <p class="text-gray-600">Tratamientos de vanguardia para revitalizar tu piel, limpiar impurezas y combatir el paso del tiempo.</p>
+                </div>
+
+                <!-- Tarjeta de Servicio 2: Corporales -->
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow text-left">
+                    <i class="fas fa-seedling text-mery-pink text-3xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Corporales</h3>
+                    <p class="text-gray-600">Reduce, tonifica y modela tu figura con la última tecnología en estética corporal.</p>
+                </div>
+
+                <!-- Tarjeta de Servicio 3: Masajes -->
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow text-left">
+                    <i class="fas fa-spa text-mery-pink text-3xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Masajes</h3>
+                    <p class="text-gray-600">Relájate y desconecta. Ofrecemos masajes descontracturantes, relajantes y reductores.</p>
+                </div>
+
+                <!-- Tarjeta de Servicio 4: Uñas -->
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow text-left">
+                    <i class="fas fa-hand-sparkles text-mery-pink text-3xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Uñas</h3>
+                    <p class="text-gray-600">Manicura y pedicura profesional. Luce unas uñas perfectas con nuestros esmaltados.</p>
+                </div>
+
+                <!-- Tarjeta de Servicio 5: HIFU -->
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow text-left">
+                    <i class="fas fa-wave-square text-mery-pink text-3xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">HIFU</h3>
+                    <p class="text-gray-600">El lifting sin cirugía. Ultrasonido focalizado para tensar la piel de rostro y cuerpo.</p>
+                </div>
+
+                <!-- Tarjeta de Servicio 6: Depilación -->
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow text-left">
+                    <i class="fas fa-leaf text-mery-pink text-3xl mb-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Depilación</h3>
+                    <p class="text-gray-600">Depilación definitiva y tradicional para una piel suave y libre de vello todo el año.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 4. Sección "Nosotros" (Sobre el centro) ===== -->
+    <section id="nosotros" class="container mx-auto px-6 py-24">
+        <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20">
+            <!-- Imagen "Nosotros" -->
+            <!-- REEMPLAZAR: Cambia esta imagen por una foto del interior de tu local -->
+            <div class="md:w-1/2">
+                <img src="https://placehold.co/500x500/f0f0f0/a0a0a0?text=Tratamiento+Facial" 
+                     alt="Tratamiento en Mery Centro Estético" 
+                     class="rounded-2xl shadow-xl w-full object-cover aspect-square">
+            </div>
+            <!-- Texto "Nosotros" -->
+            <div class="md:w-1/2">
+                <span class="text-mery-pink font-semibold">SOBRE NOSOTROS</span>
+                <h2 class="text-4xl font-bold text-gray-900 mt-2 mb-6">
+                    Tecnología y Calidez Humana
+                </h2>
+                <p class="text-gray-600 text-lg mb-4">
+                    Somos un centro estético integral que busca brindar una experiencia única, significativa, a pura desconexión y disfrute.
+                </p>
+                <p class="text-gray-600 text-lg mb-8">
+                    Nuestra prioridad es la salud y bienestar de cada paciente. Por eso, contamos con personal capacitado y certificado, y equipamiento de tecnología avanzada para lograr los mejores rendimientos y efectividad.
+                </p>
+                <a href="#contacto" class="border-2 border-mery-pink text-mery-pink font-semibold px-6 py-3 rounded-full hover:bg-mery-pink hover:text-white transition-all">
+                    Contáctanos
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 5. Sección de Membresías ===== -->
+    <section id="membresias" class="bg-gray-50 py-24">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Membresías Exclusivas</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+                Accede a beneficios y descuentos especiales durante todo el año. Elige el plan que mejor se adapta a ti.
+            </p>
+
+            <!-- Grid de Membresías -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <!-- Tarjeta Gold -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 flex flex-col">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Mery Gold</h3>
+                    <p class="text-gray-500 mb-6">El primer paso a tu bienestar.</p>
+                    <ul class="text-left space-y-2 text-gray-700 mb-8 flex-grow">
+                        <li><i class="fas fa-check text-mery-pink mr-2"></i> 10% OFF en tratamientos</li>
+                        <li><i class="fas fa-check text-mery-pink mr-2"></i> Acceso a promos flash</li>
+                    </ul>
+                    <a href="#" class="border-2 border-gray-800 text-gray-800 font-semibold w-full py-2 rounded-full hover:bg-gray-800 hover:text-white transition-all">
+                        Consultar
+                    </a>
+                </div>
+
+                <!-- Tarjeta Platinum (Destacada) -->
+                <div class="bg-gray-900 text-white p-8 rounded-xl shadow-2xl border-2 border-mery-pink relative flex flex-col transform scale-105">
+                    <span class="absolute -top-3 right-4 bg-mery-pink text-white px-3 py-1 rounded-full text-sm font-bold">Popular</span>
+                    <h3 class="text-2xl font-bold mb-2">Platinum</h3>
+                    <p class="text-gray-300 mb-6">El balance perfecto.</p>
+                    <ul class="text-left space-y-2 text-gray-200 mb-8 flex-grow">
+                        <li><i class="fas fa-check text-mery-pink mr-2"></i> 20% OFF en tratamientos</li>
+                        <li><i class="fas fa-check text-mery-pink mr-2"></i> Acceso a promos flash</li>
+                        <li><i class="fas fa-check text-mery-pink mr-2"></i> 1 masaje gratis al mes</li>
+                    </ul>
+                    <a href="#" class="bg-mery-pink text-white font-semibold w-full py-2 rounded-full hover:bg-opacity-90 transition-all">
+                        Adherirme
+                    </a>
+                </div>
+
+                <!-- Tarjeta Black -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 flex flex-col">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Black</h3>
+                    <p class="text-gray-500 mb-6">La experiencia premium.</p>
+                    <ul class="text-left space-y-2 text-gray-700 mb-8 flex-grow">
+                        <li><i class="fas fa-check text-mery-pink mr-2"></i> 30% OFF en tratamientos</li>
+                        <li><i class="fas fa-check text-mery-pink mr-2"></i> Acceso a promos flash</li>
+                        <li><i class="fas fa-check text-mery-pink mr-2"></i> 2 masajes gratis al mes</li>
+                        <li><i class="fas fa-check text-mery-pink mr-2"></i> Prioridad de agenda</li>
+                    </ul>
+                    <a href="#" class="border-2 border-gray-800 text-gray-800 font-semibold w-full py-2 rounded-full hover:bg-gray-800 hover:text-white transition-all">
+                        Consultar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 6. Sección de Reseñas (Prueba Social) ===== -->
+    <section class="container mx-auto px-6 py-24">
+        <div class="text-center">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Qué dicen nuestros clientes</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+                Nuestra mayor satisfacción es la tuya. Ve lo que opinan en Google.
+            </p>
+        </div>
+
+        <!-- Grid de Reseñas -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Reseña 1 -->
+            <div class="bg-gray-50 p-6 rounded-lg border border-gray-100">
+                <div class="flex items-center text-yellow-400 mb-3">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <span class="text-gray-900 font-bold ml-2">4.9</span>
+                </div>
+                <p class="text-gray-700 italic mb-4">"Lugar cálido y atención muy buena, Mery es un amor. Recomiendo!!"</p>
+                <div class="flex items-center">
+                    <img src="https://placehold.co/40x40/FF00A8/white?text=MR" alt="Avatar" class="w-10 h-10 rounded-full mr-3">
+                    <div>
+                        <h4 class="font-semibold text-gray-900">Micaela Rios</h4>
+                        <span class="text-sm text-gray-500">Google Review</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reseña 2 -->
+            <div class="bg-gray-50 p-6 rounded-lg border border-gray-100">
+                <div class="flex items-center text-yellow-400 mb-3">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-gray-700 italic mb-4">"Increíble lugar, muy bien ubicados! La atención es 11/10, son súper delicadas y atentas. Uso y recomiendo."</p>
+                <div class="flex items-center">
+                    <img src="https://placehold.co/40x40/FF00A8/white?text=MM" alt="Avatar" class="w-10 h-10 rounded-full mr-3">
+                    <div>
+                        <h4 class="font-semibold text-gray-900">Merlina McCall</h4>
+                        <span class="text-sm text-gray-500">Google Review</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reseña 3 -->
+            <div class="bg-gray-50 p-6 rounded-lg border border-gray-100">
+                <div class="flex items-center text-yellow-400 mb-3">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-gray-700 italic mb-4">"El lugar es hermoso, se siente un aire fresco y renovador Mery una genia! Recomendadisimo."</p>
+                <div class="flex items-center">
+                    <img src="https://placehold.co/40x40/FF00A8/white?text=CH" alt="Avatar" class="w-10 h-10 rounded-full mr-3">
+                    <div>
+                        <h4 class="font-semibold text-gray-900">Camila Hermano</h4>
+                        <span class="text-sm text-gray-500">Google Review</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 7. Footer ===== -->
+    <footer id="contacto" class="bg-gray-900 text-gray-300 py-16">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+            <!-- Columna 1: Marca -->
+            <div>
+                <a href="#" class="text-3xl font-bold text-white mb-4 block">Mery</a>
+                <p class="text-gray-400">
+                    Centro estético integral en Punta del Este.
+                </p>
+                <p class="text-gray-500 text-sm mt-6">
+                    RUC 219191790013
+                </p>
+            </div>
+            
+            <!-- Columna 2: Navegación -->
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-4">Navegación</h4>
+                <ul class="space-y-2">
+                    <li><a href="#tratamientos" class="hover:text-mery-pink">Tratamientos</a></li>
+                    <li><a href="#membresias" class="hover:text-mery-pink">Membresías</a></li>
+                    <li><a href="#nosotros" class="hover:text-mery-pink">Nosotros</a></li>
+                    <li><a href="#contacto" class="hover:text-mery-pink">Contacto</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna 3: Contacto -->
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-4">Contacto</h4>
+                <ul class="space-y-2">
+                    <!-- Deberías añadir tu dirección aquí -->
+                    <li><i class="fas fa-map-marker-alt w-5"></i> Dirección en Punta del Este</li>
+                    <li><i class="fas fa-phone w-5"></i> +598 12 345 678</li>
+                    <li><i class="fas fa-envelope w-5"></i> info@mery.uy</li>
+                </ul>
+            </div>
+
+            <!-- Columna 4: Redes Sociales -->
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-4">Síguenos</h4>
+                <div class="flex space-x-4 text-2xl">
+                    <a href="#" class="hover:text-mery-pink"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class_("hover:text-mery-pink"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-mery-pink"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="container mx-auto px-6 mt-12 border-t border-gray-700 pt-8 text-center text-gray-500 text-sm">
+            &copy; 2025 Mery Centro Estético. Todos los derechos reservados.
+        </div>
+    </footer>
+
+</body>
+</html>
+
